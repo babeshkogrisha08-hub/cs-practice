@@ -3,3 +3,5 @@ b = float(input('Введите второе число'))
 c = input('Введите знак')
 if c == '+':
     print(a+b)
+elif c == '-':
+    print(a + b)
