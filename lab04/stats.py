@@ -36,3 +36,27 @@ def read_valid(lines: list[str]) -> tuple[list[dict], int]:
             error_count += 1
 
     return valid_records, error_count
+def average_by_city(records: list[dict]) -> dict:
+    totals = {}
+    counts = {}
+
+    for record in records:
+        city = record["city"]
+        temp = record["temperature"]
+        totals[city] = totals.get(city, 0.0) + temp
+        counts[city] = counts.get(city, 0) + 1
+
+    averages = {}
+    for city in totals:
+        averages[city] = round(totals[city] / counts[city], 1)
+
+    return averages
+
+
+def warmest_city(records: list[dict]) -> str:
+    if not records:
+        return ""
+
+    averages = average_by_city(records)
+    sorted_cities = sorted(averages.keys(), key=lambda c: (-averages[c], c))
+    return sorted_cities[0]
