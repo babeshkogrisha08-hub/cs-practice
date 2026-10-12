@@ -4,7 +4,7 @@ def parse_record(line: str) -> dict:
 
     parts = line.split(";")
     if len(parts) != 3:
-        raise ValueError("Неверное количество полей")
+        raise ValueError("Неверное количество полей (должно быть ровно 3)")
 
     city, temp_str, date = parts[0].strip(), parts[1].strip(), parts[2].strip()
 
@@ -12,18 +12,21 @@ def parse_record(line: str) -> dict:
         raise ValueError("Город или дата не могут быть пустыми")
 
     try:
-        temp = float(temp_str)
+        normalized_temp = temp_str.replace(",", ".")
+        temp = float(normalized_temp)
     except ValueError:
-        raise ValueError(f"Некорректная температура: '{temp_str}'")
+        raise ValueError(f"Некорректная температура: '{temp_str}' не является числом")
 
     return {
         "city": city,
         "temperature": temp,
         "date": date
     }
-def read_valid(lines: list[str]) -> tuple[list[dict], int]:
+
+
+def read_valid(lines: list[str]) -> list[dict]:
+
     valid_records = []
-    error_count = 0
 
     for line in lines:
         if not line.strip():
@@ -33,10 +36,13 @@ def read_valid(lines: list[str]) -> tuple[list[dict], int]:
             record = parse_record(line)
             valid_records.append(record)
         except ValueError:
-            error_count += 1
+            pass
 
-    return valid_records, error_count
+    return valid_records
+
+
 def average_by_city(records: list[dict]) -> dict:
+
     totals = {}
     counts = {}
 
@@ -48,15 +54,20 @@ def average_by_city(records: list[dict]) -> dict:
 
     averages = {}
     for city in totals:
-        averages[city] = round(totals[city] / counts[city], 1)
+        avg = totals[city] / counts[city]
+        averages[city] = round(avg, 1)
 
     return averages
 
 
 def warmest_city(records: list[dict]) -> str:
+
     if not records:
         return ""
 
     averages = average_by_city(records)
+
+
     sorted_cities = sorted(averages.keys(), key=lambda c: (-averages[c], c))
+
     return sorted_cities[0]
