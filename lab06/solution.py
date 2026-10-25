@@ -24,3 +24,14 @@ def deepest_path(paths: list[str]) -> str:
                 mx = p
     return mx
 
+def human_size(n_bytes: int) -> str:
+    ed = ['Б','КБ','МБ','ГБ','ТБ']
+    size = float(n_bytes)
+    eds = 0
+    while size >= 1024 and eds < len(ed)-1:
+        size = size / 1024
+        eds = eds + 1
+    if eds == 0:
+        return f'{int(size)} {ed[eds]}'
+    else:
+        return f'{size:.1f} {ed[eds]}'
