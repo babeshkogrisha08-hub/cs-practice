@@ -6,7 +6,7 @@ def count_by_extension(paths: list[str]) -> dict[str, int]:
             ras = file.rsplit('.', 1)[1].lower()
         else:
             ras = ''
-        count[ras] = counts.get(ras, 0) + 1
+        count[ras] = count.get(ras, 0) + 1
     return count
 
 def deepest_path(paths: list[str]) -> str:
