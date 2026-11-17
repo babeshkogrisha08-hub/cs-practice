@@ -3,7 +3,7 @@ def csv_to_records(text: str) -> list[dict]:
     if len(lines) < 2:
         return []
     head = lines[0].split(',')
-    return [dict(zip(head, line.split(','))) for line in lines[1:]]
+    return [dict(zip(head, [v.strip() for v in line.split(',')])) for line in lines[1:]]
 
 
 
@@ -31,6 +31,10 @@ def parse_settings(lines: list[str]) -> dict:
             val = True
         elif low in ("false", "no"):
             val = False
+        elif raw.lstrip('-'):
+            val = int(raw)
+        elif num.lstrip('-').replace('.', '', 1):
+            val = float(num)
         else:
             val = raw
         if flag:
