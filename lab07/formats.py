@@ -36,3 +36,17 @@ def parse_settings(lines: list[str]) -> dict:
         else:
             res[key] = val
     return res
+
+
+
+
+def merge_by_key(rows: list[dict], extra: dict, key: str = id) -> list[dict]:
+    res = []
+    for row in rows:
+        cop = row.copy()
+        for item in extra:
+            if row.get(key) == item.get(key):
+                cop.update(item)
+                break
+        res.append(cop)
+    return res
