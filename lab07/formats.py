@@ -1,5 +1,7 @@
 def csv_to_records(text: str) -> list[dict]:
-    lines = [line.strip() for line in text.splitlines()]
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    if len(lines) < 2:
+        return []
     head = lines[0].split(',')
     return [dict(zip(head, line.split(','))) for line in lines[1:]]
 
@@ -40,17 +42,15 @@ def parse_settings(lines: list[str]) -> dict:
 
 
 
-def merge_by_key(rows: list[dict], extra: dict, key: str = id) -> list[dict]:
+def merge_by_key(rows: list[dict], extra: dict, key: str = "id") -> list[dict]:  # 1. "id" в кавычках
     res = []
     for row in rows:
         cop = row.copy()
-        for item in extra:
-            if row.get(key) == item.get(key):
-                cop.update(item)
-                break
+        k = row.get(key)
+        if k in extra:
+            cop.update(extra[k])
         res.append(cop)
     return res
-
 
 
 def records_to_json(records: list[dict]) -> str:
@@ -60,7 +60,7 @@ def records_to_json(records: list[dict]) -> str:
         for k in sorted(rec):
             v = rec[k]
             clean = str(v).replace('"', '\\"')
-            val = f'"{clean}"'
+            val = f'    "{clean}"'
             pairs.append(f'"{k}": {val}')
         text.append("  {\n" + ",\n".join(pairs) + "\n  }")
     return "[\n" + ",\n".join(text) + "\n]"
