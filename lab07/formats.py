@@ -27,7 +27,8 @@ def parse_settings(lines: list[str]) -> dict:
                 res[key] = []
                 continue
         low = raw.lower()
-        if low in ('true'):
+        num = raw.replace(',', '.', 1)
+        if low in ('true', 'yes'):
             val = True
         elif low in ("false", "no"):
             val = False
