@@ -50,3 +50,17 @@ def merge_by_key(rows: list[dict], extra: dict, key: str = id) -> list[dict]:
                 break
         res.append(cop)
     return res
+
+
+
+def records_to_json(records: list[dict]) -> str:
+    text = []
+    for rec in records:
+        pairs = []
+        for k in sorted(rec):
+            v = rec[k]
+            clean = str(v).replace('"', '\\"')
+            val = f'"{clean}"'
+            pairs.append(f'"{k}": {val}')
+        text.append("  {\n" + ",\n".join(pairs) + "\n  }")
+    return "[\n" + ",\n".join(text) + "\n]"
